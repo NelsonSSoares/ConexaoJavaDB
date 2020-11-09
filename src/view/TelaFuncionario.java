@@ -5,6 +5,7 @@
  */
 package view;
 
+import data.Funcionario;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -95,21 +96,13 @@ public class TelaFuncionario extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-         try {
-           final Connection con; //Varivel responsalvel pela Conexão (final é uma constante ou seja não pode ser alterado , diferente de uma variavel)
-            Statement st;   // Variael que insere dados na tabela com comando sql
-            Class.forName("com.mysql.jdbc.Driver"); //  indica o endereço do driver
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/controle","root","");// responsavel pela indicação do endereço do banco de dados e loggin no banco
-            st = con.createStatement(); // cria uma sessão com o banco, autorização para execução de comandos sql
-            st.executeUpdate("insert into tb_funcionario values('"+txtMatricula.getText()+"','"+txtNome.getText()+"','"+txtCargo.getText()+"',"+Double.parseDouble(txtSalario.getText())+")"); // Executa comando sql
-            JOptionPane.showMessageDialog(null,"Funcionario Cadastrado com Sucesso");
-            LimparCampos(); // chame classe limpar campos do formulario
-         } catch (ClassNotFoundException ex) { // tratamento de erro caso o driver nao seja encontrado
-            JOptionPane.showMessageDialog(null,"O Driver não esta na Biblioteca");
-        } catch (SQLException ex) { // tratamento de erro caso login ou endereço do banco de dados esteja incorreto
-            JOptionPane.showMessageDialog(null,"Erro nas operações no Banco de Dados");
-
-        }
+         Funcionario func = new Funcionario(); // instancia obejto na variavel func
+         func.setMatricula(txtMatricula.getText()); //pega campo do formulario e envia para a capsula de dados de cadastro de funcionario para que seja encaminhado ao banco de dados
+         func.setNome(txtNome.getText()); //pega campo do formulario e envia para a capsula de dados de cadastro de funcionario para que seja encaminhado ao banco de dados
+         func.setCargo(txtCargo.getText()); //pega campo do formulario e envia para a capsula de dados de cadastro de funcionario para que seja encaminhado ao banco de dados
+         func.setSalario(Double.parseDouble(txtSalario.getText())); //pega campo do formulario e envia para a capsula de dados de cadastro de funcionario para que seja encaminhado ao banco de dados
+         //Double.parseDouble converte o texto em numero real
+         LimparCampos();
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void LimparCampos(){
