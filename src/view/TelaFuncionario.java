@@ -6,11 +6,8 @@
 package view;
 
 import data.Funcionario;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
-import javax.swing.JOptionPane;
+import data.FuncionarioDao;
+
 
 /**
  *
@@ -96,13 +93,21 @@ public class TelaFuncionario extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+        
+         FuncionarioDao dao; // Instancia objeto na variavel dao
+         boolean status; // variavel que recebe resultado do metodo conectar
+         
          Funcionario func = new Funcionario(); // instancia obejto na variavel func
          func.setMatricula(txtMatricula.getText()); //pega campo do formulario e envia para a capsula de dados de cadastro de funcionario para que seja encaminhado ao banco de dados
          func.setNome(txtNome.getText()); //pega campo do formulario e envia para a capsula de dados de cadastro de funcionario para que seja encaminhado ao banco de dados
          func.setCargo(txtCargo.getText()); //pega campo do formulario e envia para a capsula de dados de cadastro de funcionario para que seja encaminhado ao banco de dados
          func.setSalario(Double.parseDouble(txtSalario.getText())); //pega campo do formulario e envia para a capsula de dados de cadastro de funcionario para que seja encaminhado ao banco de dados
          //Double.parseDouble converte o texto em numero real
-         LimparCampos();
+         LimparCampos();// metodo que limpa os campos
+         
+         dao = new FuncionarioDao(); // chama construtor da classe FuncionarioDao, inicializa variavel
+         status = dao.conectar(); //conta no banco de dados
+         
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void LimparCampos(){
