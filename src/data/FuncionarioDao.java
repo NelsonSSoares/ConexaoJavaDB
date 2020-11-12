@@ -31,11 +31,37 @@ public class FuncionarioDao {
             st = con.createStatement();// cria uma sessão com o banco, autorização para execução de comandos sql
             
             return true; 
-        } catch (ClassNotFoundException ex) {
+        } catch (ClassNotFoundException | SQLException ex) { //unificando o tratatamento de erro em catch só
+        
             return false; // tratamento de erro caso driver não seja localizado
-        } catch (SQLException ex) {
+        }
+        
+        /* } catch (SQLException ex) {
            return false; // tratamento de erro caso o banco de dados ou o login estejam incorretos
+        }*/
+    }
+    
+    public boolean salvar(Funcionario func){ // metodo para salvar dados no banco de dados
+        try {
+        
+        String sql; // variavel String que vai receber o comando sql
+        sql = "INSERT INTO tb_funcionario VALUES('"+ func.getMatricula() +"','"+ func.getNome() +"','"+ func.getCargo() +"',"+ func.getSalario() + ")";
+        st.executeUpdate(sql); // executa o comando sql atraves da sessão iniciada no banco de dados
+        return true;
+        } catch (SQLException ex) {
+            return false;
+        }
+    }   
+    
+    public void desconectar(){ // metodo que desconecta do banco de dadoss
+        try {
+            con.close(); // desconecta do banco de dados
+            
+        } catch (SQLException ex) {
+            
         }
     }
-
+    
+    
+    
 }
