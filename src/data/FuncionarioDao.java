@@ -41,15 +41,19 @@ public class FuncionarioDao {
         }*/
     }
     
-    public boolean salvar(Funcionario func){ // metodo para salvar dados no banco de dados
+    public int salvar(Funcionario func){ // metodo para salvar dados no banco de dados em int para pegar codigo do erro
+        
+        int status;
+        
         try {
         
         String sql; // variavel String que vai receber o comando sql
         sql = "INSERT INTO tb_funcionario VALUES('"+ func.getMatricula() +"','"+ func.getNome() +"','"+ func.getCargo() +"',"+ func.getSalario() + ")";
-        st.executeUpdate(sql); // executa o comando sql atraves da sessão iniciada no banco de dados
-        return true;
+        status = st.executeUpdate(sql); // executa o comando sql atraves da sessão iniciada no banco de dados e armazena na variavel status
+        return status; // Retorna o codigo da operação quando concluida
         } catch (SQLException ex) {
-            return false;
+            System.out.println(ex.getErrorCode()); // revela o codigo do erro na IDE
+            return ex.getErrorCode(); // retorna o codigo numerico do erro (sempre numero inteiro) ex: duplicação de chave primaira
         }
     }   
     

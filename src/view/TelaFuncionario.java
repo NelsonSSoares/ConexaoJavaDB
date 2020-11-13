@@ -7,6 +7,7 @@ package view;
 
 import data.Funcionario;
 import data.FuncionarioDao;
+import javax.swing.JOptionPane;
 
 
 /**
@@ -48,27 +49,27 @@ public class TelaFuncionario extends javax.swing.JFrame {
 
         lblMatricula.setText("Matrícula:");
         getContentPane().add(lblMatricula);
-        lblMatricula.setBounds(10, 0, 60, 30);
+        lblMatricula.setBounds(10, 10, 60, 30);
         getContentPane().add(txtMatricula);
-        txtMatricula.setBounds(70, 0, 100, 30);
+        txtMatricula.setBounds(70, 10, 100, 30);
 
         lblNome.setText("Nome:");
         getContentPane().add(lblNome);
-        lblNome.setBounds(10, 40, 60, 30);
+        lblNome.setBounds(10, 60, 60, 30);
         getContentPane().add(txtNome);
-        txtNome.setBounds(70, 40, 200, 30);
+        txtNome.setBounds(70, 60, 200, 30);
 
         lblCargo.setText("Cargo:");
         getContentPane().add(lblCargo);
-        lblCargo.setBounds(10, 80, 60, 30);
+        lblCargo.setBounds(10, 110, 60, 30);
         getContentPane().add(txtCargo);
-        txtCargo.setBounds(70, 80, 200, 30);
+        txtCargo.setBounds(70, 110, 200, 30);
 
         lblSalario.setText("Salario:");
         getContentPane().add(lblSalario);
-        lblSalario.setBounds(10, 120, 60, 30);
+        lblSalario.setBounds(10, 160, 60, 30);
         getContentPane().add(txtSalario);
-        txtSalario.setBounds(70, 120, 100, 30);
+        txtSalario.setBounds(70, 160, 100, 30);
 
         btnSalvar.setText("Salvar");
         btnSalvar.addActionListener(new java.awt.event.ActionListener() {
@@ -86,7 +87,7 @@ public class TelaFuncionario extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnSalvar1);
-        btnSalvar1.setBounds(190, 0, 90, 30);
+        btnSalvar1.setBounds(190, 10, 90, 30);
 
         setSize(new java.awt.Dimension(416, 339));
         setLocationRelativeTo(null);
@@ -95,7 +96,9 @@ public class TelaFuncionario extends javax.swing.JFrame {
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         
          FuncionarioDao dao; // Instancia objeto na variavel dao
-         boolean status; // variavel que recebe resultado do metodo conectar
+         boolean status; // recebe o valor de retorno da conexao com o banco
+         int resp;// variavel que recebe resultado do metodo conectar e desconectar
+         
          
          Funcionario func = new Funcionario(); // instancia obejto na variavel func
          func.setMatricula(txtMatricula.getText()); //pega campo do formulario e envia para a capsula de dados de cadastro de funcionario para que seja encaminhado ao banco de dados
@@ -103,11 +106,27 @@ public class TelaFuncionario extends javax.swing.JFrame {
          func.setCargo(txtCargo.getText()); //pega campo do formulario e envia para a capsula de dados de cadastro de funcionario para que seja encaminhado ao banco de dados
          func.setSalario(Double.parseDouble(txtSalario.getText())); //pega campo do formulario e envia para a capsula de dados de cadastro de funcionario para que seja encaminhado ao banco de dados
          //Double.parseDouble converte o texto em numero real
-         LimparCampos();// metodo que limpa os campos
+        
          
          dao = new FuncionarioDao(); // chama construtor da classe FuncionarioDao, inicializa variavel
-         status = dao.conectar(); //conta no banco de dados
+         status = dao.conectar(); //chama metodo conectar dentro da classe FuncionarioDao 
          
+        if(status == false){ //esta condição tambem pode ser usar como if(!status){ o sinal de ! é representado por "nao"
+            JOptionPane.showMessageDialog(null, "Erro na conexão com o banco de dados");
+        }else{
+            resp = dao.salvar(func); //chama metodo salvar na classe FuncionarioDao, aonde os dados estão encapsulados
+            if(resp == 1){ //tratamento de erro caso o retorno da variavel seja false (nao salvou)
+                 JOptionPane.showMessageDialog(null,"Funcionário Cadastrado com Sucesso");            
+                 LimparCampos();// metodo que limpa os campos              
+            }else if(resp == 1062 ){ // XAMPP 1062 é o erro de duplicação de chave primaria
+                 JOptionPane.showMessageDialog(null,"Esta Matricula ja esta cadastrada!");
+            }else{
+                JOptionPane.showMessageDialog(null,"Erro ao salvar o Funcionario");
+            }
+            dao.desconectar(); //chamate metodo desconectar dentro de FuncionarioDao desconectar do banco de dados.
+            
+        }
+        
     }//GEN-LAST:event_btnSalvarActionPerformed
 
     private void LimparCampos(){
