@@ -41,7 +41,7 @@ public class TelaFuncionario extends javax.swing.JFrame {
         lblSalario = new javax.swing.JLabel();
         txtSalario = new javax.swing.JTextField();
         btnSalvar = new javax.swing.JButton();
-        btnSalvar1 = new javax.swing.JButton();
+        btnConsultar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Cadastro de Funcionário - Test 1");
@@ -80,14 +80,14 @@ public class TelaFuncionario extends javax.swing.JFrame {
         getContentPane().add(btnSalvar);
         btnSalvar.setBounds(150, 210, 110, 40);
 
-        btnSalvar1.setText("Consultar");
-        btnSalvar1.addActionListener(new java.awt.event.ActionListener() {
+        btnConsultar.setText("Consultar");
+        btnConsultar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalvar1ActionPerformed(evt);
+                btnConsultarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnSalvar1);
-        btnSalvar1.setBounds(190, 10, 90, 30);
+        getContentPane().add(btnConsultar);
+        btnConsultar.setBounds(190, 10, 90, 30);
 
         setSize(new java.awt.Dimension(416, 339));
         setLocationRelativeTo(null);
@@ -138,9 +138,27 @@ public class TelaFuncionario extends javax.swing.JFrame {
             txtMatricula.requestFocus(); //pede foco do formulario, inicia o cursor
 }
     
-    private void btnSalvar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvar1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnSalvar1ActionPerformed
+    private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
+       
+        String matricula;
+        matricula = txtMatricula.getText(); // Variavel String Matricula recebe o valor que foi digitado no campo matricula
+        
+        FuncionarioDao dao = new FuncionarioDao();
+        boolean status = dao.conectar(); // chamada do metodo conectar com o banco de dados
+        if(status==true){ // se a conexão der certo variavel statusrecebe true
+            Funcionario func = dao.consultar(matricula); // depois de conectado, chama o metodo de consulta dentro da classe FuncionarioDao e armazena na classe Funcionario(setters e getters) aonde esta encapsulado as informações
+            if(func == null ){ // Caso retorne nulo, exebir menssagem
+                JOptionPane.showMessageDialog(null,"Funcionario Não encontrado ou Inexistente!");
+            }else{//Caso encontre o funcionario
+                txtNome.setText(func.getNome());
+                txtCargo.setText(func.getCargo());
+                txtSalario.setText(String.valueOf(func.getSalario()));// valueOf transforma em String
+            }
+            dao.desconectar(); // desconecta do banco de dados
+        }else{
+            JOptionPane.showMessageDialog(null,"Erro na Conexão com o DataBase");
+        }
+    }//GEN-LAST:event_btnConsultarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -178,8 +196,8 @@ public class TelaFuncionario extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnConsultar;
     private javax.swing.JButton btnSalvar;
-    private javax.swing.JButton btnSalvar1;
     private javax.swing.JLabel lblCargo;
     private javax.swing.JLabel lblMatricula;
     private javax.swing.JLabel lblNome;
