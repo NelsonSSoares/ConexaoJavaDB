@@ -7,6 +7,7 @@ import java.sql.Connection; // responsavel pela conexão com o banco
 import java.sql.DriverManager; // Gerenciamento do endereço e log sql
 import java.sql.SQLException; // tratamento de erros sql
 import java.sql.PreparedStatement; // biblioteca que gera sessão(autorização) e conexão com DB de modo mais compriendivel 
+import java.sql.ResultSet; // uma classe que recebe informações que é buscada no banco de dados
 //import java.sql.Statement; // sessão pata executar operação no banco (canal de acesso) executa insert updates e delete
 
 
@@ -17,6 +18,7 @@ public class FuncionarioDao {
     
     Connection con; // variavel responsavel pela conexão
     PreparedStatement st; // variavel que executa os comandos sql, por meio de sessão de autorização
+    ResultSet rs; // variavel que recebe o resultado da busca no banco de dados
     
     public boolean conectar(){
         
@@ -71,6 +73,28 @@ public class FuncionarioDao {
         }
     }
     
+    public Funcionario consultar(String matricula){ //Consulta pela chave primaria
+        try {
+        // Metodo para consultar no Banco de Dados
+        Funcionario func = new Funcionario(); //instancia o Objeto vazio da classe funcionario, aonde as informações são encapsuladas
+        // a busca é sempre feita pela Primary Key no caso a matricula
+        st = con.prepareStatement("SELECT * FROM tb_funcionario WHERE matricula = ?"); // comando Sql Gerado encima da Sessão(autorização) junto com a conexão com DB
+        st.setString(1, matricula); // numero 1 idica a posição nocomando sql aonde se encontra o "?" 
+        ResultSet rs = st.executeQuery(); // rs é a variavel que vai armazenar a consulta no banco de dados, executequery é o comando que executa o comaando SQL select
+        if(rs.next()){ // verifica se a consulta encontrou o funcionario com a matricula informada
+            // caso encontre o funcionario, pegeue o seus atributos que contem na matricula, na mesma ordem das colunas do banco de dados
+            func.setMatricula(rs.getString("matricula"));
+            func.setNome(rs.getString("nome"));
+            func.setCargo(rs.getString("cargo"));
+            func.setSalario(rs.getDouble("salario"));
+            return func;  
+            } else {
+                 return null; // Retorne nulo caso nao encontre o funcionario
+            }
+        } catch (SQLException ex) {
+           return null; // Retorna nulo, caso o haja algum erro no comando
+        }
     
-    
+    }
+
 }
