@@ -8,6 +8,8 @@ import java.sql.DriverManager; // Gerenciamento do endereço e log sql
 import java.sql.SQLException; // tratamento de erros sql
 import java.sql.PreparedStatement; // biblioteca que gera sessão(autorização) e conexão com DB de modo mais compriendivel 
 import java.sql.ResultSet; // uma classe que recebe informações que é buscada no banco de dados
+import java.util.logging.Level;
+import java.util.logging.Logger;
 //import java.sql.Statement; // sessão pata executar operação no banco (canal de acesso) executa insert updates e delete
 
 
@@ -96,5 +98,16 @@ public class FuncionarioDao {
         }
     
     }
-
+    
+    public boolean excluir(String matricula){
+        try {
+            // encima da conexão estabelecida com sessão autorizada, variaveis "st" = "con"
+            st = con.prepareStatement("DELETE FROM tb_funcionario WHERE matricula = ?");//comando sql para excluir funcionario da tabela do banco aonde a matricula for igual informada pelo usuario
+            st.setString(1, matricula);// insere a informação no comando sql no ? com o numero informando a posição e a variavel com a informação do usuario
+            st.executeUpdate();//excuta o comando sql
+            return true; // se exlcuir retorna verdadeiro
+        } catch (SQLException ex) {
+            return false;// se nao exlcuir retorna falso
+        }
+    }
 }

@@ -42,6 +42,7 @@ public class TelaFuncionario extends javax.swing.JFrame {
         txtSalario = new javax.swing.JTextField();
         btnSalvar = new javax.swing.JButton();
         btnConsultar = new javax.swing.JButton();
+        btnExcluir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Cadastro de Funcionário - Test 1");
@@ -88,6 +89,16 @@ public class TelaFuncionario extends javax.swing.JFrame {
         });
         getContentPane().add(btnConsultar);
         btnConsultar.setBounds(190, 10, 90, 30);
+
+        btnExcluir.setText("Excuir");
+        btnExcluir.setEnabled(false);
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnExcluir);
+        btnExcluir.setBounds(290, 10, 90, 30);
 
         setSize(new java.awt.Dimension(416, 339));
         setLocationRelativeTo(null);
@@ -153,12 +164,34 @@ public class TelaFuncionario extends javax.swing.JFrame {
                 txtNome.setText(func.getNome());
                 txtCargo.setText(func.getCargo());
                 txtSalario.setText(String.valueOf(func.getSalario()));// valueOf transforma em String
+                btnExcluir.setEnabled(true); // habilita o botão exlcuir
             }
             dao.desconectar(); // desconecta do banco de dados
+            
         }else{
             JOptionPane.showMessageDialog(null,"Erro na Conexão com o DataBase");
         }
     }//GEN-LAST:event_btnConsultarActionPerformed
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+        FuncionarioDao dao = new FuncionarioDao(); // instancia classe FuncionarioDao na variavel dao
+        //int confirma = JOptionPane.showConfirmDialog(null,"Deseja realmente excluir o funcionario?"); // mostra caixa de confirmação, seim apertar sim coonfirma recebe 1, se nao, recebe 0
+        boolean status = dao.conectar(); // variavel status recebe metodo conectar da classe FuncionarioDao 
+        if(status==false){
+            JOptionPane.showMessageDialog(null, "Erro na Conexão do BD");
+        }else{
+            status = dao.excluir(txtMatricula.getText());
+            if(status ==true){
+                JOptionPane.showMessageDialog(null,"Funcionario Excluido com Sucesso");
+                LimparCampos();
+                btnExcluir.setEnabled(false); // desabilita o botão exlcuir apos exclusão
+            }else{
+                JOptionPane.showMessageDialog(null, "Erro na Exclusão do Funcionario");
+                
+            }
+            dao.desconectar(); // Desconecta do banco de dados
+        }
+    }//GEN-LAST:event_btnExcluirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -197,6 +230,7 @@ public class TelaFuncionario extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnConsultar;
+    private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnSalvar;
     private javax.swing.JLabel lblCargo;
     private javax.swing.JLabel lblMatricula;
