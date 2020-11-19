@@ -97,6 +97,7 @@ public class FuncionarioDao {
            return null; // Retorna nulo, caso o haja algum erro no comando
         }
     
+        
     }
     
     public boolean excluir(String matricula){
